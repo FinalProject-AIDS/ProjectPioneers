@@ -1,0 +1,66 @@
+[
+    {
+        "id": 1,
+        "appliance": "Fan",
+        "floor": 1,
+        "wattage": 75,
+        "daily_usage_hours": 8,
+        "days_active": 30
+    },
+    {
+        "id": 2,
+        "appliance": "Tube Light",
+        "floor": 1,
+        "wattage": 40,
+        "daily_usage_hours": 6,
+        "days_active": 30
+    },
+    {
+        "id": 3,
+        "appliance": "Bulb",
+        "floor": 2,
+        "wattage": 60,
+        "daily_usage_hours": 5,
+        "days_active": 30
+    },
+    {
+        "id": 4,
+        "appliance": "Cooler",
+        "floor": 2,
+        "wattage": 250,
+        "daily_usage_hours": 6,
+        "days_active": 30
+    },
+    {
+        "id": 5,
+        "appliance": "Fan",
+        "floor": 3,
+        "wattage": 75,
+        "daily_usage_hours": 10,
+        "days_active": 30
+    },
+    {
+        "id": 6,
+        "appliance": "Tube Light",
+        "floor": 3,
+        "wattage": 40,
+        "daily_usage_hours": 8,
+        "days_active": 30
+    },
+    {
+        "id": 7,
+        "appliance": "Bulb",
+        "floor": 1,
+        "wattage": 60,
+        "daily_usage_hours": 4,
+        "days_active": 30
+    },
+    {
+        "id": 8,
+        "appliance": "Cooler",
+        "floor": 3,
+        "wattage": 250,
+        "daily_usage_hours": 8,
+        "days_active": 30
+    }
+]

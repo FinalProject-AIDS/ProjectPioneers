@@ -1,0 +1,534 @@
+{
+    "metadata": {
+        "version": "1.1",
+        "description": "Three-month energy consumption data for two households in India",
+        "period": {
+            "start": "2024-01-01",
+            "end": "2024-03-31"
+        },
+        "currency": "INR",
+        "energy_rate": {
+            "value": 7,
+            "unit": "INR per kWh"
+        }
+    },
+    "households": [
+        {
+            "id": "HH-A-2024",
+            "name": "Household A",
+            "appliances": [
+                {
+                    "id": "A-FAN-01",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "A-FAN-02",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "A-FAN-03",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "A-FAN-04",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "A-LIGHT-01",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-02",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-03",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-04",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-05",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-06",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-07",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-LIGHT-08",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "A-OVEN-01",
+                    "type": "Oven",
+                    "wattage": 2000
+                },
+                {
+                    "id": "A-AC-01",
+                    "type": "Air Conditioner",
+                    "wattage": 1500
+                },
+                {
+                    "id": "A-TV-01",
+                    "type": "TV",
+                    "wattage": 100
+                },
+                {
+                    "id": "A-WM-01",
+                    "type": "Washing Machine",
+                    "wattage": 500
+                }
+            ],
+            "monthly_data": [
+                {
+                    "month": "2024-01",
+                    "total_kwh": 380,
+                    "bill_amount": 2660,
+                    "appliance_usage": [
+                        {
+                            "id": "A-FAN-01",
+                            "hours": 60
+                        },
+                        {
+                            "id": "A-FAN-02",
+                            "hours": 50
+                        },
+                        {
+                            "id": "A-FAN-03",
+                            "hours": 40
+                        },
+                        {
+                            "id": "A-FAN-04",
+                            "hours": 45
+                        },
+                        {
+                            "id": "A-LIGHT-01",
+                            "hours": 150
+                        },
+                        {
+                            "id": "A-LIGHT-02",
+                            "hours": 140
+                        },
+                        {
+                            "id": "A-LIGHT-03",
+                            "hours": 130
+                        },
+                        {
+                            "id": "A-LIGHT-04",
+                            "hours": 120
+                        },
+                        {
+                            "id": "A-LIGHT-05",
+                            "hours": 110
+                        },
+                        {
+                            "id": "A-LIGHT-06",
+                            "hours": 100
+                        },
+                        {
+                            "id": "A-LIGHT-07",
+                            "hours": 90
+                        },
+                        {
+                            "id": "A-LIGHT-08",
+                            "hours": 80
+                        },
+                        {
+                            "id": "A-OVEN-01",
+                            "hours": 15
+                        },
+                        {
+                            "id": "A-AC-01",
+                            "hours": 30
+                        },
+                        {
+                            "id": "A-TV-01",
+                            "hours": 120
+                        },
+                        {
+                            "id": "A-WM-01",
+                            "hours": 20
+                        }
+                    ]
+                },
+                {
+                    "month": "2024-02",
+                    "total_kwh": 350,
+                    "bill_amount": 2450,
+                    "appliance_usage": [
+                        {
+                            "id": "A-FAN-01",
+                            "hours": 50
+                        },
+                        {
+                            "id": "A-FAN-02",
+                            "hours": 45
+                        },
+                        {
+                            "id": "A-FAN-03",
+                            "hours": 35
+                        },
+                        {
+                            "id": "A-FAN-04",
+                            "hours": 40
+                        },
+                        {
+                            "id": "A-LIGHT-01",
+                            "hours": 140
+                        },
+                        {
+                            "id": "A-LIGHT-02",
+                            "hours": 130
+                        },
+                        {
+                            "id": "A-LIGHT-03",
+                            "hours": 120
+                        },
+                        {
+                            "id": "A-LIGHT-04",
+                            "hours": 110
+                        },
+                        {
+                            "id": "A-LIGHT-05",
+                            "hours": 100
+                        },
+                        {
+                            "id": "A-LIGHT-06",
+                            "hours": 90
+                        },
+                        {
+                            "id": "A-LIGHT-07",
+                            "hours": 80
+                        },
+                        {
+                            "id": "A-LIGHT-08",
+                            "hours": 70
+                        },
+                        {
+                            "id": "A-OVEN-01",
+                            "hours": 12
+                        },
+                        {
+                            "id": "A-AC-01",
+                            "hours": 25
+                        },
+                        {
+                            "id": "A-TV-01",
+                            "hours": 110
+                        },
+                        {
+                            "id": "A-WM-01",
+                            "hours": 18
+                        }
+                    ]
+                },
+                {
+                    "month": "2024-03",
+                    "total_kwh": 420,
+                    "bill_amount": 2940,
+                    "appliance_usage": [
+                        {
+                            "id": "A-FAN-01",
+                            "hours": 80
+                        },
+                        {
+                            "id": "A-FAN-02",
+                            "hours": 70
+                        },
+                        {
+                            "id": "A-FAN-03",
+                            "hours": 60
+                        },
+                        {
+                            "id": "A-FAN-04",
+                            "hours": 65
+                        },
+                        {
+                            "id": "A-LIGHT-01",
+                            "hours": 160
+                        },
+                        {
+                            "id": "A-LIGHT-02",
+                            "hours": 150
+                        },
+                        {
+                            "id": "A-LIGHT-03",
+                            "hours": 140
+                        },
+                        {
+                            "id": "A-LIGHT-04",
+                            "hours": 130
+                        },
+                        {
+                            "id": "A-LIGHT-05",
+                            "hours": 120
+                        },
+                        {
+                            "id": "A-LIGHT-06",
+                            "hours": 110
+                        },
+                        {
+                            "id": "A-LIGHT-07",
+                            "hours": 100
+                        },
+                        {
+                            "id": "A-LIGHT-08",
+                            "hours": 90
+                        },
+                        {
+                            "id": "A-OVEN-01",
+                            "hours": 18
+                        },
+                        {
+                            "id": "A-AC-01",
+                            "hours": 40
+                        },
+                        {
+                            "id": "A-TV-01",
+                            "hours": 130
+                        },
+                        {
+                            "id": "A-WM-01",
+                            "hours": 22
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "HH-B-2024",
+            "name": "Household B",
+            "appliances": [
+                {
+                    "id": "B-FAN-01",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "B-FAN-02",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "B-FAN-03",
+                    "type": "Fan",
+                    "wattage": 75
+                },
+                {
+                    "id": "B-LIGHT-01",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-LIGHT-02",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-LIGHT-03",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-LIGHT-04",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-LIGHT-05",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-LIGHT-06",
+                    "type": "Light",
+                    "wattage": 9
+                },
+                {
+                    "id": "B-TV-01",
+                    "type": "TV",
+                    "wattage": 100
+                },
+                {
+                    "id": "B-WM-01",
+                    "type": "Washing Machine",
+                    "wattage": 500
+                }
+            ],
+            "monthly_data": [
+                {
+                    "month": "2024-01",
+                    "total_kwh": 220,
+                    "bill_amount": 1540,
+                    "appliance_usage": [
+                        {
+                            "id": "B-FAN-01",
+                            "hours": 50
+                        },
+                        {
+                            "id": "B-FAN-02",
+                            "hours": 45
+                        },
+                        {
+                            "id": "B-FAN-03",
+                            "hours": 40
+                        },
+                        {
+                            "id": "B-LIGHT-01",
+                            "hours": 140
+                        },
+                        {
+                            "id": "B-LIGHT-02",
+                            "hours": 130
+                        },
+                        {
+                            "id": "B-LIGHT-03",
+                            "hours": 120
+                        },
+                        {
+                            "id": "B-LIGHT-04",
+                            "hours": 110
+                        },
+                        {
+                            "id": "B-LIGHT-05",
+                            "hours": 100
+                        },
+                        {
+                            "id": "B-LIGHT-06",
+                            "hours": 90
+                        },
+                        {
+                            "id": "B-TV-01",
+                            "hours": 110
+                        },
+                        {
+                            "id": "B-WM-01",
+                            "hours": 15
+                        }
+                    ]
+                },
+                {
+                    "month": "2024-02",
+                    "total_kwh": 200,
+                    "bill_amount": 1400,
+                    "appliance_usage": [
+                        {
+                            "id": "B-FAN-01",
+                            "hours": 45
+                        },
+                        {
+                            "id": "B-FAN-02",
+                            "hours": 40
+                        },
+                        {
+                            "id": "B-FAN-03",
+                            "hours": 35
+                        },
+                        {
+                            "id": "B-LIGHT-01",
+                            "hours": 130
+                        },
+                        {
+                            "id": "B-LIGHT-02",
+                            "hours": 120
+                        },
+                        {
+                            "id": "B-LIGHT-03",
+                            "hours": 110
+                        },
+                        {
+                            "id": "B-LIGHT-04",
+                            "hours": 100
+                        },
+                        {
+                            "id": "B-LIGHT-05",
+                            "hours": 90
+                        },
+                        {
+                            "id": "B-LIGHT-06",
+                            "hours": 80
+                        },
+                        {
+                            "id": "B-TV-01",
+                            "hours": 100
+                        },
+                        {
+                            "id": "B-WM-01",
+                            "hours": 12
+                        }
+                    ]
+                },
+                {
+                    "month": "2024-03",
+                    "total_kwh": 240,
+                    "bill_amount": 1680,
+                    "appliance_usage": [
+                        {
+                            "id": "B-FAN-01",
+                            "hours": 60
+                        },
+                        {
+                            "id": "B-FAN-02",
+                            "hours": 55
+                        },
+                        {
+                            "id": "B-FAN-03",
+                            "hours": 50
+                        },
+                        {
+                            "id": "B-LIGHT-01",
+                            "hours": 150
+                        },
+                        {
+                            "id": "B-LIGHT-02",
+                            "hours": 140
+                        },
+                        {
+                            "id": "B-LIGHT-03",
+                            "hours": 130
+                        },
+                        {
+                            "id": "B-LIGHT-04",
+                            "hours": 120
+                        },
+                        {
+                            "id": "B-LIGHT-05",
+                            "hours": 110
+                        },
+                        {
+                            "id": "B-LIGHT-06",
+                            "hours": 100
+                        },
+                        {
+                            "id": "B-TV-01",
+                            "hours": 120
+                        },
+                        {
+                            "id": "B-WM-01",
+                            "hours": 18
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

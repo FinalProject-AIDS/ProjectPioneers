@@ -25,13 +25,13 @@ def initialize_session_state():
 def load_data():
     """Load and cache multiple JSON files from energy_data folder"""
     try:
-        data_folder = 'energy_data'
+        data_folder = 'synthetic_data'
         if not os.path.exists(data_folder):
             st.error(f"Data folder '{data_folder}' not found!")
             return pd.DataFrame()
 
         json_files = [f for f in os.listdir(data_folder) 
-                     if f.startswith('energy_data_') and f.endswith('.json')]
+                     if f.startswith('data_') and f.endswith('.json')]
         
         if not json_files:
             st.warning("No energy data files found!")
@@ -129,25 +129,43 @@ def display_overview(dashboard, metrics):
         st.plotly_chart(occupancy_fig, use_container_width=True)
 
 def display_detailed_analysis(dashboard):
-    """Display detailed analysis page"""
+    """Display detailed analysis page with time frame selection"""
     st.title("Detailed Energy Analysis")
     
-    # Efficiency Score
+    # Sidebar Time Frame Selector
+    st.sidebar.subheader("Select Time Frame")
+    time_frame = st.sidebar.selectbox("Time Frame", ["Daily", "Weekly", "Monthly", "Yearly"])
+
+    # Energy Efficiency Score and Consumption Prediction
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Energy Efficiency Score")
-        efficiency_score = 75  # This should be calculated based on your metrics
+        efficiency_score = 75  # Placeholder; calculate based on metrics as needed
         efficiency_fig = dashboard.create_efficiency_gauge(efficiency_score)
         st.plotly_chart(efficiency_fig, use_container_width=True)
     
     with col2:
         st.subheader("Consumption Prediction")
-        # Example data for prediction plot
+        # Sample data for prediction plot
         dates = dashboard.df['timestamp'].tail(30)
         actual = dashboard.df['total_consumption'].tail(30)
-        predicted = actual * 1.1  # Dummy prediction
+        predicted = actual * 1.1  # Example prediction data
         prediction_fig = dashboard.create_prediction_plot(actual, predicted, dates)
         st.plotly_chart(prediction_fig, use_container_width=True)
+
+    # Additional Visualizations Based on Selected Time Frame
+    st.subheader("Energy Consumption Over Time")
+    consumption_trend_fig = dashboard.plot_consumption_trend(time_frame=time_frame)
+    st.plotly_chart(consumption_trend_fig, use_container_width=True)
+
+    st.subheader("Peak Consumption Times")
+    peak_consumption_fig = dashboard.plot_peak_consumption(time_frame=time_frame)
+    st.plotly_chart(peak_consumption_fig, use_container_width=True)
+
+    st.subheader("Monthly Trends") #Placeholder until we decide how to handle seasonal trend
+    seasonal_trend_fig = dashboard.plot_monthly_trend(time_frame=time_frame)
+    st.plotly_chart(seasonal_trend_fig, use_container_width=True)
+
 
 def main():
     st.set_page_config(

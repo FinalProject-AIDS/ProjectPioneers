@@ -7,7 +7,7 @@ import streamlit_authenticator as stauth
 BASE_DIR = Path(__file__).resolve().parent
 
 # Data directory
-DATA_DIR = os.path.join(BASE_DIR, 'data', 'energy_data')
+DATA_DIR = os.path.join(BASE_DIR, 'data', 'synthetic_data')
 
 # Model configurations
 MODEL_CONFIG = {

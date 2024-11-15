@@ -278,22 +278,22 @@ class DashboardComponents:
         
         return fig
 
-    def create_efficiency_gauge(self, score):
-        """Create efficiency score gauge"""
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=score,
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={
-                'axis': {'range': [0, 100]},
-                'bar': {'color': self.colors['primary']},
-                'steps': [
-                    {'range': [0, 50], 'color': "lightgray"},
-                    {'range': [50, 75], 'color': "gray"},
-                    {'range': [75, 100], 'color': "darkgray"}
-                ]
-            }
-        ))
+    # def create_efficiency_gauge(self, score):
+    #     """Create efficiency score gauge"""
+    #     fig = go.Figure(go.Indicator(
+    #         mode="gauge+number",
+    #         value=score,
+    #         domain={'x': [0, 1], 'y': [0, 1]},
+    #         gauge={
+    #             'axis': {'range': [0, 100]},
+    #             'bar': {'color': self.colors['primary']},
+    #             'steps': [
+    #                 {'range': [0, 50], 'color': "lightgray"},
+    #                 {'range': [50, 75], 'color': "gray"},
+    #                 {'range': [75, 100], 'color': "darkgray"}
+    #             ]
+    #         }
+    #     ))
         
         fig.update_layout(
             title='Energy Efficiency Score',
@@ -332,19 +332,19 @@ class DashboardComponents:
         
         return fig
 
-    def get_summary_metrics(self):
-        """Calculate and return summary metrics"""
-        total_consumption = self.df['total_consumption'].sum()
-        avg_daily_consumption = self.df.groupby(self.df['timestamp'].dt.date)['total_consumption'].sum().mean()
-        total_cost = total_consumption * 0.12  # Assuming cost per Watt-hour
-        avg_occupancy = self.df['occupancy_level'].mean()
+    # def get_summary_metrics(self):
+    #     """Calculate and return summary metrics"""
+    #     total_consumption = self.df['total_consumption'].sum()
+    #     avg_daily_consumption = self.df.groupby(self.df['timestamp'].dt.date)['total_consumption'].sum().mean()
+    #     total_cost = total_consumption * 0.12  # Assuming cost per Watt-hour
+    #     avg_occupancy = self.df['occupancy_level'].mean()
         
-        return {
-            "total_consumption": total_consumption,
-            "avg_daily_consumption": avg_daily_consumption,
-            "total_cost": total_cost,
-            "avg_occupancy": avg_occupancy
-        }
+    #     return {
+    #         "total_consumption": total_consumption,
+    #         "avg_daily_consumption": avg_daily_consumption,
+    #         "total_cost": total_cost,
+    #         "avg_occupancy": avg_occupancy
+    #     }
     
     def display_cost_analysis(self):
         """Display cost analysis"""
@@ -353,6 +353,158 @@ class DashboardComponents:
         st.write(f"Total Consumption: {total_consumption / 1000:.2f} kWh")
         st.write(f"Total Cost: ${total_cost:.2f}")
 
+    def get_summary_metrics(self):
+        """Calculate summary metrics"""
+        metrics = {
+            'total_consumption': self.df['total_consumption'].sum(),
+            'avg_daily_consumption': self.df['total_consumption'].mean(),
+            'total_cost': self.df['total_consumption'].sum() * 0.12,  # Example rate
+            'avg_occupancy': self.df['occupancy_level'].mean()
+        }
+        return metrics
+    def calculate_efficiency_score(self):
+        """Calculate energy efficiency score based on multiple metrics"""
+        try:
+            latest_data = self.df.iloc[-1]  # Get most recent data point
+            
+            score = 100
+            metrics = {}
+            
+            # 1. Occupancy Efficiency (30 points)
+            per_person_consumption = latest_data['total_consumption'] / latest_data['occupancy_level']
+            metrics['occupancy_score'] = min(30, (30 * (1000 / per_person_consumption)))
+            
+            # 2. Peak Load Efficiency (20 points)
+            peak_load_ratio = latest_data['total_consumption'] / latest_data['peak_load']
+            metrics['peak_load_score'] = 20 * peak_load_ratio
+            
+            # 3. Equipment Utilization (20 points)
+            floor_data = latest_data['floor_data'] if isinstance(latest_data['floor_data'], list) else []
+            total_equipment = sum(
+                floor.get('fan_consumption', 0) + floor.get('light_consumption', 0) 
+                for floor in floor_data
+            )
+            equipment_ratio = total_equipment / latest_data['total_consumption']
+            metrics['equipment_score'] = 20 * (1 - equipment_ratio)
+            
+            # 4. Temperature Optimization (15 points)
+            optimal_temp = 22
+            temp_diff = abs(latest_data['temperature'] - optimal_temp)
+            metrics['temperature_score'] = 15 * (1 - (temp_diff / 10))
+            
+            # 5. Time-based Usage (15 points)
+            time_scores = {
+                "Morning": 15,
+                "Afternoon": 10,
+                "Evening": 5
+            }
+            metrics['time_score'] = time_scores.get(latest_data['time_of_day'], 5)
+            
+            # Calculate final score
+            final_score = sum(metrics.values())
+            final_score = max(0, min(100, round(final_score)))
+            
+            return final_score, metrics
+            
+        except Exception as e:
+            st.error(f"Error calculating efficiency score: {str(e)}")
+            return 0, {}
+
+    def create_efficiency_gauge(self, score):
+        """Create an efficiency gauge visualization"""
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=score,
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={
+                'axis': {'range': [0, 100]},
+                'bar': {'color': "darkblue"},
+                'steps': [
+                    {'range': [0, 40], 'color': "red"},
+                    {'range': [40, 70], 'color': "yellow"},
+                    {'range': [70, 100], 'color': "green"}
+                ],
+                'threshold': {
+                    'line': {'color': "black", 'width': 4},
+                    'thickness': 0.75,
+                    'value': score
+                }
+            },
+            title={'text': "Energy Efficiency Score"}
+        ))
+        
+        fig.update_layout(
+            height=300,
+            margin=dict(l=10, r=10, t=50, b=10),
+            font={'size': 16}
+        )
+        
+        return fig
+
+    def display_efficiency_metrics(self, metrics):
+        """Display detailed breakdown of efficiency metrics"""
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            metrics_data = {
+                "Occupancy Efficiency": {"score": metrics['occupancy_score'], "max": 30},
+                "Peak Load Efficiency": {"score": metrics['peak_load_score'], "max": 20},
+                "Equipment Utilization": {"score": metrics['equipment_score'], "max": 20},
+            }
+            
+            for metric, data in metrics_data.items():
+                st.metric(
+                    metric,
+                    f"{data['score']:.1f}/{data['max']}",
+                    delta=f"{(data['score']/data['max']*100):.1f}%"
+                )
+                
+        with col2:
+            metrics_data = {
+                "Temperature Optimization": {"score": metrics['temperature_score'], "max": 15},
+                "Time-based Usage": {"score": metrics['time_score'], "max": 15}
+            }
+            
+            for metric, data in metrics_data.items():
+                st.metric(
+                    metric,
+                    f"{data['score']:.1f}/{data['max']}",
+                    delta=f"{(data['score']/data['max']*100):.1f}%"
+                )
+
+    def create_optimization_recommendations(self, metrics):
+        """Generate optimization recommendations based on metrics"""
+        recommendations = []
+        
+        if metrics['occupancy_score'] < 20:
+            recommendations.append({
+                "category": "Occupancy",
+                "priority": "High",
+                "suggestion": "Consider adjusting HVAC and lighting schedules to better match occupancy patterns"
+            })
+            
+        if metrics['peak_load_score'] < 15:
+            recommendations.append({
+                "category": "Peak Load",
+                "priority": "Medium",
+                "suggestion": "Implement load shifting strategies to reduce peak demand"
+            })
+            
+        if metrics['equipment_score'] < 15:
+            recommendations.append({
+                "category": "Equipment",
+                "priority": "High",
+                "suggestion": "Review equipment scheduling and consider upgrading to more efficient models"
+            })
+            
+        if metrics['temperature_score'] < 10:
+            recommendations.append({
+                "category": "Temperature",
+                "priority": "Medium",
+                "suggestion": "Adjust temperature setpoints closer to optimal range (22°C)"
+            })
+            
+        return recommendations
     def display_recommendations(self):
         """Display energy-saving recommendations"""
         # Here you can call the RecommendationEngine or define some placeholder recommendations

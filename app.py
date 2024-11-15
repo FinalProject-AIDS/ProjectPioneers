@@ -140,9 +140,21 @@ def display_detailed_analysis(dashboard):
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Energy Efficiency Score")
-        efficiency_score = 75  # Placeholder; calculate based on metrics as needed
-        efficiency_fig = dashboard.create_efficiency_gauge(efficiency_score)
+        score, metrics = dashboard.calculate_efficiency_score()  # Calculate real score
+        efficiency_fig = dashboard.create_efficiency_gauge(score)
         st.plotly_chart(efficiency_fig, use_container_width=True)
+        
+        # Add metrics breakdown in an expander
+        with st.expander("View Efficiency Metrics Breakdown"):
+            dashboard.display_efficiency_metrics(metrics)
+            
+        # Add recommendations in an expander
+        with st.expander("View Optimization Recommendations"):
+            recommendations = dashboard.create_optimization_recommendations(metrics)
+            for rec in recommendations:
+                st.markdown(f"**{rec['category']} - {rec['priority']} Priority**")
+                st.write(rec['suggestion'])
+                st.markdown("---")
     
     with col2:
         st.subheader("Consumption Prediction")

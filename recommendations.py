@@ -1,11 +1,22 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import streamlit as st
 
 class RecommendationEngine:
     def __init__(self, df):
-        self.df = df
+        self.df = df.copy()  # Create a copy to avoid modifying original
+        # Add necessary time-based columns
+        self.df['hour'] = pd.to_datetime(self.df['timestamp']).dt.hour
+        self.df['month'] = pd.to_datetime(self.df['timestamp']).dt.month
+        self.df['is_weekend'] = pd.to_datetime(self.df['timestamp']).dt.dayofweek.isin([5, 6])
         self.recommendations = []
+        
+        # Add tracking for implementation status and reminders
+        if 'implemented_recommendations' not in st.session_state:
+            st.session_state.implemented_recommendations = set()
+        if 'recommendation_reminders' not in st.session_state:
+            st.session_state.recommendation_reminders = {}
         
     def generate_recommendations(self):
         """Generate comprehensive energy savings recommendations"""
@@ -39,46 +50,54 @@ class RecommendationEngine:
     
     def _analyze_equipment_usage(self):
         """Analyze and recommend based on equipment usage patterns"""
-        avg_computer = self.df['computer_consumption'].mean()
-        avg_projector = self.df['projector_consumption'].mean()
+        avg_consumption = self.df['total_consumption'].mean()
         
         equipment_recommendations = {
             'category': 'Equipment Usage',
-            'findings': "Analysis of equipment consumption patterns",
-            'recommendations': []
+            'findings': "Analysis of overall consumption patterns",
+            'recommendations': [
+                "Configure all computers to enter sleep mode after 15 minutes of inactivity",
+                "Install motion sensors for automatic equipment shutdown",
+                "Implement a policy for turning off non-essential equipment during breaks",
+                "Use smart power strips to reduce standby power consumption"
+            ],
+            'potential_savings': "10-15% of current equipment energy usage"
         }
         
-        if avg_computer > 500:  # Threshold can be adjusted
-            equipment_recommendations['recommendations'].append(
-                "Configure computers to enter sleep mode after 15 minutes of inactivity"
-            )
-            
-        if avg_projector > 300:  # Threshold can be adjusted
-            equipment_recommendations['recommendations'].append(
-                "Install motion sensors for projectors to auto-shutdown when rooms are empty"
-            )
-            
-        if len(equipment_recommendations['recommendations']) > 0:
-            self.recommendations.append(equipment_recommendations)
+        self.recommendations.append(equipment_recommendations)
     
     def _analyze_occupancy_patterns(self):
         """Analyze and recommend based on occupancy patterns"""
+        if 'occupancy_level' not in self.df.columns:
+            recommendation = {
+                'category': 'Occupancy Optimization',
+                'findings': "No detailed occupancy data available",
+                'recommendations': [
+                    "Install occupancy sensors in all areas",
+                    "Implement zone-based lighting controls",
+                    "Set up automated HVAC scheduling",
+                    "Consider smart building management system"
+                ],
+                'potential_savings': "15-20% on lighting and HVAC costs"
+            }
+            self.recommendations.append(recommendation)
+            return
+
         avg_consumption_per_occupant = (
             self.df['total_consumption'] / self.df['occupancy_level']
         ).mean()
         
-        if avg_consumption_per_occupant > 50:  # Threshold can be adjusted
-            recommendation = {
-                'category': 'Occupancy Optimization',
-                'findings': f"Average consumption per occupant: {avg_consumption_per_occupant:.2f} Watt-hours",
-                'recommendations': [
-                    "Implement zone-based lighting controls",
-                    "Install occupancy sensors in less frequently used areas",
-                    "Optimize HVAC settings based on occupancy patterns"
-                ],
-                'potential_savings': "15-25% on lighting and HVAC costs"
-            }
-            self.recommendations.append(recommendation)
+        recommendation = {
+            'category': 'Occupancy Optimization',
+            'findings': f"Average consumption per occupant: {avg_consumption_per_occupant:.2f} Watt-hours",
+            'recommendations': [
+                "Implement zone-based lighting controls",
+                "Install occupancy sensors in less frequently used areas",
+                "Optimize HVAC settings based on occupancy patterns"
+            ],
+            'potential_savings': "15-25% on lighting and HVAC costs"
+        }
+        self.recommendations.append(recommendation)
     
     def _analyze_after_hours(self):
         """Analyze and recommend based on after-hours usage"""
@@ -169,23 +188,67 @@ class RecommendationEngine:
             self.recommendations.append(recommendation)
 
     def _generate_cost_savings(self):
-        """Generate cost-based recommendations"""
+        """Generate cost-based recommendations with detailed ROI analysis"""
         total_consumption = self.df['total_consumption'].sum()
         avg_daily_consumption = self.df.groupby(pd.to_datetime(self.df['timestamp']).dt.date)['total_consumption'].mean().mean()
         
-        # Assume average electricity rate of $0.12 per kWh
-        daily_cost = (avg_daily_consumption * 0.12) / 1000
+        # Enhanced cost calculations
+        energy_rates = {
+            'peak': 12.0,    # ₹/kWh during peak hours
+            'off_peak': 6.0, # ₹/kWh during off-peak
+            'solar': 3.0,    # ₹/kWh with solar
+        }
+        
+        implementation_costs = {
+            'motion_sensors': {
+                'cost': 2500,  # ₹ per sensor
+                'units_needed': 10,
+                'installation': 5000,
+                'maintenance_yearly': 2000,
+            },
+            'solar_panels': {
+                'cost': 50000,  # ₹ per kW
+                'capacity_kw': 10,
+                'installation': 100000,
+                'maintenance_yearly': 25000,
+            },
+            'smart_monitoring': {
+                'cost': 75000,
+                'subscription_yearly': 12000,
+            }
+        }
+        
+        # Using ₹8 per kWh (typical Indian rate)
+        daily_cost = (avg_daily_consumption * 8) / 1000
         
         recommendation = {
             'category': 'Cost Optimization',
-            'findings': f"Average daily energy cost: ${daily_cost:.2f}",
+            'findings': f"Average daily energy cost: ₹{daily_cost:.2f}",
             'recommendations': [
-                "Negotiate better electricity rates during off-peak hours",
-                "Consider solar panel installation for long-term savings",
-                "Implement real-time energy monitoring and alerts",
-                "Train staff on energy-efficient practices"
+                {
+                    'title': "Time-of-Day Usage Optimization",
+                    'description': "Shift non-essential operations to off-peak hours (10 PM - 6 AM) for better rates",
+                    'impact': "High",
+                    'implementation_cost': "Low",
+                    'payback_period': "1-2 months"
+                },
+                {
+                    'title': "Solar Energy Integration",
+                    'description': "Install solar panels for sustainable energy generation",
+                    'impact': "Very High",
+                    'implementation_cost': "High",
+                    'payback_period': "3-4 years"
+                },
+                {
+                    'title': "Smart Monitoring System",
+                    'description': "Implement real-time energy monitoring with mobile alerts",
+                    'impact': "Medium",
+                    'implementation_cost': "Medium",
+                    'payback_period': "6-8 months"
+                }
             ],
-            'potential_savings': f"${(daily_cost * 0.2 * 30):.2f} per month through optimizations"
+            'potential_savings': f"₹{(daily_cost * 0.2 * 30):.2f} per month through optimizations",
+            'priority': 'High'
         }
         self.recommendations.append(recommendation)
 
@@ -219,3 +282,90 @@ class RecommendationEngine:
             return pd.DataFrame(self.recommendations).to_json(orient='records')
         else:
             raise ValueError("Unsupported format. Use 'dict', 'df', or 'json'")
+
+    def display_recommendations(self):
+        """Display all recommendations in a formatted way"""
+        if not self.recommendations:
+            return "No recommendations generated yet. Please run generate_recommendations() first."
+            
+        formatted_recommendations = []
+        for rec in self.recommendations:
+            # Create a more structured and detailed format
+            formatted_rec = f"""
+### {rec['category']} (Priority: {rec.get('priority', 'Medium')})
+
+**Current Status:**
+{rec['findings']}
+
+**Potential Impact:**
+{rec.get('potential_savings', 'Savings to be calculated')}
+
+**Recommended Actions:**
+"""
+            # Check if recommendations is a list of dictionaries (new format) or list of strings (old format)
+            if isinstance(rec['recommendations'][0], dict):
+                for action in rec['recommendations']:
+                    formatted_rec += f"""
+* **{action['title']}**
+  - {action['description']}
+  - Impact: {action['impact']}
+  - Implementation Cost: {action['implementation_cost']}
+  - Payback Period: {action['payback_period']}
+"""
+            else:
+                for action in rec['recommendations']:
+                    formatted_rec += f"* {action}\n"
+
+            formatted_rec += "\n---"
+            formatted_recommendations.append(formatted_rec)
+            
+        return formatted_recommendations
+
+    def calculate_roi(self, recommendation_type):
+        """Calculate detailed ROI for different types of recommendations"""
+        
+        roi_data = {
+            'lighting_optimization': {
+                'initial_cost': 50000,
+                'monthly_savings': 8000,
+                'lifespan_years': 5,
+                'maintenance_cost_yearly': 2000
+            },
+            'hvac_optimization': {
+                'initial_cost': 150000,
+                'monthly_savings': 25000,
+                'lifespan_years': 10,
+                'maintenance_cost_yearly': 15000
+            },
+            'solar_installation': {
+                'initial_cost': 600000,
+                'monthly_savings': 45000,
+                'lifespan_years': 25,
+                'maintenance_cost_yearly': 25000
+            }
+        }
+        
+        if recommendation_type not in roi_data:
+            return None
+            
+        data = roi_data[recommendation_type]
+        
+        # Calculate NPV and ROI
+        monthly_rate = 0.10 / 12  # 10% annual interest rate
+        total_months = data['lifespan_years'] * 12
+        
+        npv = -data['initial_cost']
+        for month in range(total_months):
+            monthly_benefit = data['monthly_savings'] - (data['maintenance_cost_yearly'] / 12)
+            npv += monthly_benefit / (1 + monthly_rate) ** month
+            
+        roi = (npv / data['initial_cost']) * 100
+        payback_months = data['initial_cost'] / data['monthly_savings']
+        
+        return {
+            'npv': npv,
+            'roi_percentage': roi,
+            'payback_months': payback_months,
+            'monthly_savings': data['monthly_savings'],
+            'initial_cost': data['initial_cost']
+        }
